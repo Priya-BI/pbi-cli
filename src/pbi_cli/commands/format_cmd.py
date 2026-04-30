@@ -80,8 +80,8 @@ def format_clear(ctx: PbiContext, click_ctx: click.Context, visual: str, page: s
     required=True,
     help='queryRef of the target field (e.g. "Sum(financials.Profit)").',
 )
-@click.option("--min-color", default="#FFFFFF", show_default=True, help="Gradient minimum color (hex).")
-@click.option("--max-color", default="#118DFF", show_default=True, help="Gradient maximum color (hex).")
+@click.option("--min-color", default="#FFFFFF", show_default=True, help="Gradient minimum color.")
+@click.option("--max-color", default="#118DFF", show_default=True, help="Gradient maximum color.")
 @click.pass_context
 @pass_context
 def background_gradient(

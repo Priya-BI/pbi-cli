@@ -219,7 +219,7 @@ def test_format_background_gradient_correct_structure(report_with_visual: Path) 
     linear = fill_rule_expr["FillRule"]["linearGradient2"]
     assert "min" in linear
     assert "max" in linear
-    assert "nullColoringStrategy" in linear
+    assert "nullColoringStrategy" in linear["min"]
 
 
 # ---------------------------------------------------------------------------
