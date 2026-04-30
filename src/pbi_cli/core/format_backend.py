@@ -54,8 +54,15 @@ def _save_visual(
     visual_name: str,
     data: dict[str, Any],
 ) -> None:
-    """Write visual JSON data back to disk."""
+    """Write visual JSON data back to disk.
+
+    A ``.json.bak`` copy of the previous file is created before writing so
+    that a corrupted write can be recovered manually.
+    """
     visual_path = get_visual_dir(definition_path, page_name, visual_name) / "visual.json"
+    if visual_path.exists():
+        backup_path = visual_path.with_suffix(".json.bak")
+        backup_path.write_bytes(visual_path.read_bytes())
     _write_json(visual_path, data)
 
 
@@ -132,8 +139,8 @@ def format_background_gradient(
     input_table: str,
     input_column: str,
     field_query_ref: str,
-    min_color: str = "minColor",
-    max_color: str = "maxColor",
+    min_color: str = "#FFFFFF",
+    max_color: str = "#118DFF",
 ) -> dict[str, Any]:
     """Add a linear gradient background color rule to a visual column.
 
@@ -176,11 +183,13 @@ def format_background_gradient(
                                 },
                                 "FillRule": {
                                     "linearGradient2": {
-                                        "min": {"color": {"Literal": {"Value": f"'{min_color}'"}}},
-                                        "max": {"color": {"Literal": {"Value": f"'{max_color}'"}}},
-                                        "nullColoringStrategy": {
-                                            "strategy": {"Literal": {"Value": "'asZero'"}}
+                                        "min": {
+                                            "color": {"Literal": {"Value": f"'{min_color}'"}},
+                                            "nullColoringStrategy": {
+                                                "strategy": {"Literal": {"Value": "'asZero'"}}
+                                            },
                                         },
+                                        "max": {"color": {"Literal": {"Value": f"'{max_color}'"}}},
                                     }
                                 },
                             }
