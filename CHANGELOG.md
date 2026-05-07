@@ -5,6 +5,15 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.11.2] - 2026-05-07
+
+### Fixed
+- `power-bi-report` skill no longer claims `pbi report reload` "sends a keyboard shortcut" to Power BI Desktop. The actual implementation calls `sync_desktop()`: it saves and closes the open `.pbip`, re-applies any PBIR edits that Desktop's save would overwrite, then reopens the file. The stale wording was confusing users who expected a `Ctrl+Shift+F5` keypress and looked it up in Microsoft's shortcut docs ([#8](https://github.com/MinaSaad1/pbi-cli/issues/8)).
+- Auto-sync section of the same skill now states explicitly that sync closes and reopens Desktop after each write, so the close/reopen behavior triggered by `pbi visual update` (and other write commands) is no longer surprising. `--no-sync` remains the escape hatch.
+
+### Removed
+- `src/pbi_cli/utils/desktop_reload.py` -- dead code. The Ctrl+Shift+F5 keyboard-shortcut module was an earlier implementation no longer imported anywhere in `src/`. The `[reload]` extras in `pyproject.toml` (which installs `pywin32`) is unchanged because `desktop_sync.py` still depends on it.
+
 ## [3.11.1] - 2026-05-04
 
 ### Fixed

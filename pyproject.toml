@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "pbi-cli-tool"
-version = "3.11.1"
+version = "3.11.2"
 description = "CLI for Power BI semantic models and PBIR reports - direct .NET connection for token-efficient AI agent usage"
 readme = "README.pypi.md"
 license = "MIT AND LicenseRef-Microsoft-AS-Client-Libraries"
@@ -75,8 +75,6 @@ select = ["E", "F", "I", "N", "W", "UP"]
 "src/pbi_cli/core/session.py" = ["N806"]
 "src/pbi_cli/core/tom_backend.py" = ["N806", "N814"]
 "src/pbi_cli/core/dotnet_loader.py" = ["N806", "N814"]
-# Win32 API constants use UPPER_CASE; PowerShell inline scripts are long
-"src/pbi_cli/utils/desktop_reload.py" = ["N806", "E501"]
 # HTML/SVG template strings are inherently long
 "src/pbi_cli/preview/renderer.py" = ["E501"]
 # Mock objects mirror .NET CamelCase API

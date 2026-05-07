@@ -91,15 +91,20 @@ pbi report reload
 ```
 
 Power BI Desktop's Developer Mode auto-detects TMDL changes but not PBIR
-changes. This command sends a keyboard shortcut to the Desktop window to
-trigger a reload. Requires the `reload` optional dependency: `pip install pbi-cli-tool[reload]`
+changes. This command saves and closes the open `.pbip` in Desktop, re-applies
+any PBIR edits that Desktop's save would overwrite, then reopens the file.
+
+Requires the `reload` optional dependency (installs `pywin32`):
+`pip install pbi-cli-tool[reload]`
 
 ## Suppressing Auto-Sync (--no-sync)
 
 By default, every write command (`add-page`, `delete-page`, `set-background`,
 `set-theme`, etc.) automatically syncs Power BI Desktop after each operation.
-When building a report in multiple steps, this causes Desktop to reload after
-every single command.
+The sync closes Desktop with save and reopens the `.pbip` (it does not send a
+keyboard shortcut), so users will see Desktop close and relaunch after each
+write. When building a report in multiple steps, this causes Desktop to
+close-and-reopen after every single command.
 
 Use `--no-sync` on the `report` command group to suppress per-command syncs,
 then call `pbi report reload` once at the end:
