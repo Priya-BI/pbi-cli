@@ -278,18 +278,23 @@ def validate(ctx: PbiContext, click_ctx: click.Context, full: bool) -> None:
 
 
 @report.command()
+@click.pass_context
 @pass_context
-def reload(ctx: PbiContext) -> None:
-    """Trigger Power BI Desktop to reload the current report.
+def reload(ctx: PbiContext, click_ctx: click.Context) -> None:
+    """Sync PBIR changes to Power BI Desktop.
 
-    Sends Ctrl+Shift+F5 to Power BI Desktop. Tries pywin32 first,
-    falls back to PowerShell, then prints manual instructions.
+    Saves and closes the open .pbip in Desktop, re-applies any PBIR
+    changes that Desktop's save would overwrite, then reopens the file.
 
-    Install pywin32 for best results: pip install pbi-cli-tool[reload]
+    Requires pywin32: pip install pbi-cli-tool[reload]
     """
-    from pbi_cli.utils.desktop_reload import reload_desktop
+    from pbi_cli.core.pbir_path import resolve_report_path
+    from pbi_cli.utils.desktop_sync import sync_desktop
 
-    run_command(ctx, reload_desktop)
+    report_path = click_ctx.parent.obj.get("report_path") if click_ctx.parent else None
+    definition_path = resolve_report_path(report_path)
+
+    run_command(ctx, sync_desktop, pbip_hint=report_path, definition_path=str(definition_path))
 
 
 @report.command()
