@@ -1,3 +1,8 @@
 """pbi-cli: CLI for Power BI semantic models via direct .NET interop."""
 
-__version__ = "3.10.10"
+from importlib.metadata import PackageNotFoundError, version as _pkg_version
+
+try:
+    __version__ = _pkg_version("pbi-cli-tool")
+except PackageNotFoundError:
+    __version__ = "0.0.0+unknown"
