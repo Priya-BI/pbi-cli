@@ -138,6 +138,51 @@ All report commands auto-detect the `.Report` folder:
 2. Auto-detect: walks up from CWD looking for `*.Report/definition/`
 3. From `.pbip`: finds sibling `.Report` folder from `.pbip` file
 
+## Schema Rules (Don't Break These)
+
+These constraints are not obvious but will silently crash PBI Desktop on open:
+
+### `.pbip` artifacts — only `report` is allowed
+
+The `.pbip` file's `artifacts` array must contain ONLY a `report` entry.
+Never add a `dataset` entry — the schema rejects it:
+
+```json
+// CORRECT
+"artifacts": [{ "report": { "path": "MyReport.Report" } }]
+
+// WRONG — crashes on open with a schema validation error
+"artifacts": [
+  { "report": { "path": "MyReport.Report" } },
+  { "dataset": { "path": "MyModel.SemanticModel" } }
+]
+```
+
+The semantic model is linked via `definition.pbir`, not the `.pbip` artifacts.
+
+### `definition.pbir` path — must be a non-null string
+
+`datasetReference.byPath.path` must always be a non-null string pointing to the
+SemanticModel folder. Setting it to `null` is a schema violation:
+
+```json
+// CORRECT
+"datasetReference": { "byPath": { "path": "../MyModel.SemanticModel" } }
+
+// WRONG — null is not allowed by the schema
+"datasetReference": { "byPath": { "path": null } }
+```
+
+### Always validate before opening Desktop
+
+```bash
+pbi report validate
+```
+
+Run this after every structural change. It catches JSON parse errors (including
+trailing commas), missing required files, and broken page references before
+PBI Desktop sees them.
+
 ## Workflow: Build a Complete Report
 
 This workflow uses commands from multiple skills:

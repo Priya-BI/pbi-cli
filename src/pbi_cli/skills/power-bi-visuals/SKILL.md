@@ -36,6 +36,32 @@ Each visual is created as a folder with a `visual.json` file inside the page's
 `visuals/` directory. The template includes the correct schema URL and queryState
 roles for the chosen type.
 
+## Prerequisite: Measures Must Exist in the Semantic Model
+
+`visual bind` writes field references into the visual JSON. It does **not**
+create measures — it only records that a measure should exist. If the measure
+is missing from the TMDL, every visual bound to it will show an error in Desktop.
+
+**Before binding any visual to a measure, verify the measure exists:**
+
+```bash
+# Option A: create it via pbi-cli (requires pbi connect)
+pbi connect
+pbi measure create Fact_Sales "Total Revenue" "SUM(Fact_Sales[Total_Revenue])"
+
+# Option B: check existing measures in the TMDL file directly
+# Look for `measure '...' =` lines in SemanticModel/definition/tables/*.tmdl
+```
+
+**After adding measures directly to a TMDL file** (without `pbi connect`):
+close and reopen the `.pbip` file in Power BI Desktop. Desktop only reads TMDL
+on file open — it does not hot-reload TMDL changes made on disk.
+
+**Checklist before opening Desktop:**
+- Every `--field`, `--value`, `--indicator` reference points to a real measure or column in the TMDL
+- Table names match exactly (case-sensitive in PBIR): `"Fact_Sales"` ≠ `"fact_sales"`
+- Measure names match exactly: `"Total Revenue"` ≠ `"Total_Revenue"`
+
 ## Binding Data
 
 Visuals start empty. Use `visual bind` with `Table[Column]` notation to connect
