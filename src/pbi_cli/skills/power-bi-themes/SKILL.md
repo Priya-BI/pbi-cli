@@ -79,6 +79,24 @@ Key sections:
 
 See [Microsoft theme documentation](https://learn.microsoft.com/power-bi/create-reports/desktop-report-themes) for the full schema.
 
+## Invalid Properties to Avoid
+
+These properties look plausible but are **not in PBI's theme schema**. Including
+them causes PBI Desktop to fail silently or crash when loading the report:
+
+| Property | Location | Why invalid |
+|---|---|---|
+| `"radius": 8` | Inside `border` objects in `visualStyles` | Borders only accept `color` and `show` |
+| `"page": { ... }` | Top-level key | Legacy pbiviz format — not valid in report themes |
+| `"dropShadow": { "position": "Inner" }` | Inside `visualStyles` | No `position` sub-property exists for dropShadow |
+
+**Safe top-level keys** for a custom theme:
+`name`, `dataColors`, `background`, `foreground`, `tableAccent`,
+`visualStyles`, `textClasses`, `outspaceColor`, `borderColor`, `shapeColors`
+
+Always use `pbi report diff-theme` to preview changes before applying, and
+open the report in Desktop once to confirm it loads before committing the file.
+
 ## Conditional Formatting
 
 Apply data-driven formatting to individual visuals:
