@@ -218,7 +218,7 @@ pbi-cli covers both the semantic model layer and the report layer:
 ```bash
 # Model layer (requires pbi connect)
 pbi connect
-pbi measure create Sales "Total Revenue" "SUM(Sales[Amount])"
+pbi measure create "Total Revenue" -e "SUM(Sales[Amount])" -t Sales
 
 # Report layer (no connection needed)
 pbi report create . --name "Sales"

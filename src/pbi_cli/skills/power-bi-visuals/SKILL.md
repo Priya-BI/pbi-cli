@@ -47,7 +47,7 @@ is missing from the TMDL, every visual bound to it will show an error in Desktop
 ```bash
 # Option A: create it via pbi-cli (requires pbi connect)
 pbi connect
-pbi measure create Fact_Sales "Total Revenue" "SUM(Fact_Sales[Total_Revenue])"
+pbi measure create "Total Revenue" -e "SUM(Fact_Sales[Total_Revenue])" -t Fact_Sales
 
 # Option B: check existing measures in the TMDL file directly
 # Look for `measure '...' =` lines in SemanticModel/definition/tables/*.tmdl
